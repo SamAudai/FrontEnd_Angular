@@ -20,7 +20,9 @@ export class MenuComponent implements OnInit {
     //this.dishes = this.dishService.getDishes();
     
     //after use promise
-    this.dishService.getDishes().then(dishes => this.dishes=dishes);
+    //this.dishService.getDishes().then(dishes => this.dishes=dishes);
+
+    this.dishService.getDishes().subscribe(dishes => this.dishes = dishes);
   }
 
   onSelect(dish:Dish){

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Promotion } from '../shared/promotion';
 import { PROMOTIONS } from '../shared/promotions';
-
+import { Observable, of } from 'rxjs';
+import { delay } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -16,13 +17,15 @@ export class PromotionService {
   }*/
 
   //return all promotion with promise
-  getPromotions(): Promise<Promotion[]> {
+  getPromotions(): Observable<Promotion[]> {
     //return Promise.resolve(PROMOTIONS);
 
-    return new Promise(resolve=> {
+    /*return new Promise(resolve=> {
       // Simulate server latency with 2 second delay
         setTimeout(() => resolve(PROMOTIONS), 2000)
-      });
+      });*/
+
+      return of(PROMOTIONS).pipe(delay(2000));
   }
   
 
@@ -32,13 +35,15 @@ export class PromotionService {
   }*/
 
   //return specific promotion in array by id with promise
-  getPromotion(id: string): Promise<Promotion> {
+  getPromotion(id: string): Observable<Promotion> {
     //return Promise.resolve(PROMOTIONS.filter((promo) => (promo.id === id))[0]);
 
-    return new Promise(resolve=> {
+    /*return new Promise(resolve=> {
       // Simulate server latency with 2 second delay
         setTimeout(() => resolve(PROMOTIONS.filter((promotion) => (promotion.id === id))[0]), 2000);
-    });
+    });*/
+
+    return of(PROMOTIONS.filter((promotion) => (promotion.id === id))[0]).pipe(delay(2000));
   }
 
   /*//return specific leader in array by featured without promise
@@ -47,13 +52,15 @@ export class PromotionService {
   }*/
 
   //return specific leader in array by featured with promise
-  getFeaturedPromotion(): Promise<Promotion> {
+  getFeaturedPromotion(): Observable<Promotion> {
     //return Promise.resolve(PROMOTIONS.filter((promotion) => promotion.featured)[0]);
 
-    return  new Promise(resolve=> {
+    /*return  new Promise(resolve=> {
       // Simulate server latency with 2 second delay
         setTimeout(() => resolve(PROMOTIONS.filter((promotion) => promotion.featured)[0]), 2000);
-    });
+    });*/
+
+    return of(PROMOTIONS.filter((promotion) => promotion.featured)[0]).pipe(delay(2000));
   }
 
 }
