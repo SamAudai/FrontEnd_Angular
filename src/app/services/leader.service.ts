@@ -9,15 +9,33 @@ export class LeaderService {
 
   constructor() { }
 
+  /*//return all leader without promise
   getLeaders(): Leader[] {
     return LEADERS;
+  }*/
+
+  //return all leader with promise
+  getLeaders(): Promise<Leader[]> {
+    return Promise.resolve(LEADERS);
   }
 
+  /*//return specific leader in array by id without promise
   getLeader(id: string): Leader {
     return LEADERS.filter((lead) => (lead.id === id))[0];
+  }*/
+
+  //return specific leader in array by id with promise
+  getLeader(id: string): Promise<Leader> {
+    return Promise.resolve(LEADERS.filter((lead) => (lead.id === id))[0]);
   }
 
+  /*//return specific leader in array by featured without promise
   getFeaturedLeader(): Leader {
     return LEADERS.filter((leader) => leader.featured)[0];
+  }*/
+
+  //return specific leader in array by featured with promise
+  getFeaturedLeader(): Promise<Leader> {
+    return Promise.resolve(LEADERS.filter((leader) => leader.featured)[0]);
   }
 }
