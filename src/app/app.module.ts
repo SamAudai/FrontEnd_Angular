@@ -12,6 +12,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { matSelectAnimations, MatSelectModule } from '@angular/material/select';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -45,7 +46,7 @@ import { LoginComponent } from './login/login.component';
     HomeComponent,
     AboutComponent,
     ContactComponent,
-    LoginComponent
+    LoginComponent    
   ],
   imports: [
     BrowserModule,
@@ -64,7 +65,8 @@ import { LoginComponent } from './login/login.component';
     MatCheckboxModule,
     MatDialogModule,
     MatSelectModule,
-    MatSlideToggleModule         
+    MatSlideToggleModule,
+    MatProgressSpinnerModule        
   ],
   providers: [
     DishService,
