@@ -1,15 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Dish } from '../shared/dish';
-import { DISHIES } from '../shared/dishes';
 import { Observable, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
+
+import { map } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { baseURL } from '../shared/baseurl';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class DishService {
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
   
   /*//return all dishies without promise
   getDishes(): Dish[] {
@@ -25,7 +29,9 @@ export class DishService {
         setTimeout(() => resolve(DISHIES), 2000)
       });*/
 
-      return of(DISHIES).pipe(delay(2000));
+      //return of(DISHIES).pipe(delay(2000));
+
+      return this.http.get<Dish[]>(baseURL + 'dishes');
   }
   
   /*//return specific dish in array by id without promise
@@ -42,7 +48,9 @@ export class DishService {
         setTimeout(() => resolve(DISHIES.filter((dish) => (dish.id === id))[0]), 2000);
     });*/
 
-    return of(DISHIES.filter((dish) => (dish.id === id))[0]).pipe(delay(2000));
+    //return of(DISHIES.filter((dish) => (dish.id === id))[0]).pipe(delay(2000));
+
+    return this.http.get<Dish>(baseURL + 'dishes/' + id);
   }
   
   /*//return specific dish in array by featured without promise
@@ -59,11 +67,15 @@ export class DishService {
         setTimeout(() => resolve(DISHIES.filter((dish) => dish.featured)[0]), 2000);
     });*/
 
-    return of(DISHIES.filter((dish) => dish.featured)[0]).pipe(delay(2000));
+    //return of(DISHIES.filter((dish) => dish.featured)[0]).pipe(delay(2000));
+
+    return this.http.get<Dish[]>(baseURL + 'dishes?featured=true').pipe(map(dishes => dishes[0]));
   }
 
   getDishIds(): Observable<string[] | any> {
-    return of(DISHIES.map(dish => dish.id ));
+    //return of(DISHIES.map(dish => dish.id ));
+
+    return this.getDishes().pipe(map(dishes => dishes.map(dish => dish.id)));
   }
 
 }
