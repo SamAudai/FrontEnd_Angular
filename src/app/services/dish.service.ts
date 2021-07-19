@@ -3,9 +3,10 @@ import { Dish } from '../shared/dish';
 import { Observable, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 
-import { map } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { baseURL } from '../shared/baseurl';
+import { ProcessHttpMsgService } from './process-http-msg.service';
 
 
 @Injectable({
@@ -13,7 +14,7 @@ import { baseURL } from '../shared/baseurl';
 })
 export class DishService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private processHttpMsgService: ProcessHttpMsgService) { }
   
   /*//return all dishies without promise
   getDishes(): Dish[] {
@@ -31,7 +32,8 @@ export class DishService {
 
       //return of(DISHIES).pipe(delay(2000));
 
-      return this.http.get<Dish[]>(baseURL + 'dishes');
+      return this.http.get<Dish[]>(baseURL + 'dishes')
+             .pipe(catchError(this.processHttpMsgService.handleError));
   }
   
   /*//return specific dish in array by id without promise
@@ -50,7 +52,8 @@ export class DishService {
 
     //return of(DISHIES.filter((dish) => (dish.id === id))[0]).pipe(delay(2000));
 
-    return this.http.get<Dish>(baseURL + 'dishes/' + id);
+    return this.http.get<Dish>(baseURL + 'dishes/' + id)
+          .pipe(catchError(this.processHttpMsgService.handleError));
   }
   
   /*//return specific dish in array by featured without promise
@@ -69,13 +72,15 @@ export class DishService {
 
     //return of(DISHIES.filter((dish) => dish.featured)[0]).pipe(delay(2000));
 
-    return this.http.get<Dish[]>(baseURL + 'dishes?featured=true').pipe(map(dishes => dishes[0]));
+    return this.http.get<Dish[]>(baseURL + 'dishes?featured=true').pipe(map(dishes => dishes[0]))
+          .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
   getDishIds(): Observable<string[] | any> {
     //return of(DISHIES.map(dish => dish.id ));
 
-    return this.getDishes().pipe(map(dishes => dishes.map(dish => dish.id)));
+    return this.getDishes().pipe(map(dishes => dishes.map(dish => dish.id)))
+          .pipe(catchError(error => error));
   }
 
 }
