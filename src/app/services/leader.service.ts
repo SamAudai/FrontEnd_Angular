@@ -4,12 +4,17 @@ import { LEADERS } from '../shared/Leaders';
 import { Observable, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 
+import { map, catchError } from 'rxjs/operators';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { baseURL } from '../shared/baseurl';
+import { ProcessHttpMsgService } from './process-http-msg.service';
+
 @Injectable({
   providedIn: 'root'
 })
 export class LeaderService {
 
-  constructor() { }
+  constructor(private http: HttpClient, private processHttpMsgService: ProcessHttpMsgService) { }
 
   /*//return all leader without promise
   getLeaders(): Leader[] {
@@ -25,7 +30,10 @@ export class LeaderService {
         setTimeout(() => resolve(LEADERS), 2000)
       });*/
 
-      return of(LEADERS).pipe(delay(2000));
+      //return of(LEADERS).pipe(delay(2000));
+
+      return this.http.get<Leader[]>(baseURL + 'leaders')
+             .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
   /*//return specific leader in array by id without promise
@@ -42,7 +50,10 @@ export class LeaderService {
         setTimeout(() => resolve(LEADERS.filter((leader) => (leader.id === id))[0]), 2000);
     });*/
 
-    return of(LEADERS.filter((leader) => (leader.id === id))[0]).pipe(delay(2000));
+    //return of(LEADERS.filter((leader) => (leader.id === id))[0]).pipe(delay(2000));
+
+    return this.http.get<Leader>(baseURL + 'leaders/' + id)
+          .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
   /*//return specific leader in array by featured without promise
@@ -59,6 +70,9 @@ export class LeaderService {
         setTimeout(() => resolve(LEADERS.filter((leader) => leader.featured)[0]), 2000);
     });*/
 
-    return of(LEADERS.filter((leader) => leader.featured)[0]).pipe(delay(2000));
+    //return of(LEADERS.filter((leader) => leader.featured)[0]).pipe(delay(2000));
+
+    return this.http.get<Leader[]>(baseURL + 'leaders?featured=true').pipe(map(leaders => leaders[0]))
+          .pipe(catchError(this.processHttpMsgService.handleError));
   }
 }

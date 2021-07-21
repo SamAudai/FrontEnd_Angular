@@ -4,12 +4,18 @@ import { PROMOTIONS } from '../shared/promotions';
 import { Observable, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 
+import { map, catchError } from 'rxjs/operators';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { baseURL } from '../shared/baseurl';
+import { ProcessHttpMsgService } from './process-http-msg.service';
+
+
 @Injectable({
   providedIn: 'root'
 })
 export class PromotionService {
 
-  constructor() { }
+  constructor(private http: HttpClient, private processHttpMsgService: ProcessHttpMsgService) { }
 
   /*//return all promotion without promise
   getPromotions(): Promotion[] {
@@ -25,7 +31,10 @@ export class PromotionService {
         setTimeout(() => resolve(PROMOTIONS), 2000)
       });*/
 
-      return of(PROMOTIONS).pipe(delay(2000));
+      //return of(PROMOTIONS).pipe(delay(2000));
+
+      return this.http.get<Promotion[]>(baseURL + 'promotions')
+             .pipe(catchError(this.processHttpMsgService.handleError));
   }
   
 
@@ -43,7 +52,10 @@ export class PromotionService {
         setTimeout(() => resolve(PROMOTIONS.filter((promotion) => (promotion.id === id))[0]), 2000);
     });*/
 
-    return of(PROMOTIONS.filter((promotion) => (promotion.id === id))[0]).pipe(delay(2000));
+    //return of(PROMOTIONS.filter((promotion) => (promotion.id === id))[0]).pipe(delay(2000));
+
+    return this.http.get<Promotion>(baseURL + 'promotions/' + id)
+          .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
   /*//return specific leader in array by featured without promise
@@ -60,7 +72,10 @@ export class PromotionService {
         setTimeout(() => resolve(PROMOTIONS.filter((promotion) => promotion.featured)[0]), 2000);
     });*/
 
-    return of(PROMOTIONS.filter((promotion) => promotion.featured)[0]).pipe(delay(2000));
+    //return of(PROMOTIONS.filter((promotion) => promotion.featured)[0]).pipe(delay(2000));
+
+    return this.http.get<Promotion[]>(baseURL + 'promotions?featured=true').pipe(map(promotions => promotions[0]))
+          .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
 }

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Dish } from '../shared/dish';
+import { DISHIES } from '../shared/dishes';
 import { Observable, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 
@@ -93,6 +94,5 @@ export class DishService {
       .pipe(catchError(this.processHttpMsgService.handleError));
 
   }  
-
 
 }
